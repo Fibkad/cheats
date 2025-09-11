@@ -1,0 +1,106 @@
+-- LocalScript для инжектора Solara с радужным GUI, сохраняющимся при ресете
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+
+-- Проверка PlayerGui
+local playerGui = player:WaitForChild("PlayerGui", 5)
+if not playerGui then
+    error("PlayerGui не найден!")
+    return
+end
+
+-- Создание ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "RainbowGUIPersistent"
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Создание фрейма
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 400, 0, 100)
+frame.Position = UDim2.new(0.5, -200, 0.5, -50)
+frame.BackgroundTransparency = 0.5
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BorderSizePixel = 0
+frame.Parent = gui
+local frameCorner = Instance.new("UICorner")
+frameCorner.CornerRadius = UDim.new(0, 15)
+frameCorner.Parent = frame
+local frameStroke = Instance.new("UIStroke")
+frameStroke.Thickness = 2
+frameStroke.Color = Color3.fromRGB(255, 255, 255)
+frameStroke.Parent = frame
+
+-- Создание текстовой надписи
+local textLabel = Instance.new("TextLabel")
+textLabel.Text = "Я ТУПОЙ ПИДОР С ЧИТАМИ!"
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.Font = Enum.Font.GothamBold
+textLabel.TextSize = 24
+textLabel.TextWrapped = true
+textLabel.Parent = frame
+
+-- Создание радужного градиента
+local gradient = Instance.new("UIGradient")
+gradient.Parent = textLabel
+local rainbowColors = {
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),    -- Красный
+    ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 127, 0)), -- Оранжевый
+    ColorSequenceKeypoint.new(0.33, Color3.fromRGB(255, 255, 0)), -- Жёлтый
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 0)),    -- Зелёный
+    ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)),    -- Синий
+    ColorSequenceKeypoint.new(0.83, Color3.fromRGB(75, 0, 130)),  -- Индиго
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(148, 0, 211))     -- Фиолетовый
+}
+gradient.Color = ColorSequence.new(rainbowColors)
+
+-- Анимация радуги
+local function animateRainbow()
+    while true do
+        for rotation = 0, 360, 2 do
+            gradient.Rotation = rotation
+            wait(0.01)  -- Скорость анимации
+        end
+    end
+end
+spawn(animateRainbow)
+
+-- Защита от удаления (базовая)
+local function protectGUI()
+    gui.AncestryChanged:Connect(function(child, parent)
+        if not parent then
+            gui.Parent = playerGui
+            print("GUI восстановлено после попытки удаления!")
+        end
+    end)
+end
+protectGUI()
+
+-- Начальное уведомление (одноразовое)
+local function showInitialNotification()
+    local notification = Instance.new("TextLabel")
+    notification.Text = "Спасибо за установку   майнера!"
+    notification.Size = UDim2.new(0, 200, 0, 40)
+    notification.Position = UDim2.new(0.5, -100, 0.1, 0)
+    notification.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    notification.TextColor3 = Color3.fromRGB(255, 255, 255)
+    notification.Font = Enum.Font.Gotham
+    notification.TextSize = 14
+    notification.Visible = true
+    notification.Parent = gui
+    local notifCorner = Instance.new("UICorner")
+    notifCorner.CornerRadius = UDim.new(0, 10)
+    notifCorner.Parent = notification
+    local notifStroke = Instance.new("UIStroke")
+    notifStroke.Thickness = 1
+    notifStroke.Color = Color3.fromRGB(100, 100, 100)
+    notifStroke.Parent = notification
+    wait(2)
+    notification:Destroy()
+end
+showInitialNotification()
