@@ -36,7 +36,7 @@ frameStroke.Parent = frame
 
 -- Создание текстовой надписи
 local textLabel = Instance.new("TextLabel")
-textLabel.Text = "Я ТУПОЙ ПИДОР С ЧИТАМИ!"
+textLabel.Text = "Ты Пидор!"
 textLabel.Size = UDim2.new(1, 0, 1, 0)
 textLabel.BackgroundTransparency = 1
 textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
